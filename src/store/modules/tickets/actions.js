@@ -7,5 +7,8 @@ export default {
    },
    mergedChosenConnecting(context, payload){
        context.commit('mergedChosenConnecting', payload);
-   }
+   },
+   setFormatDate(context, payload) {
+    context.commit('setFormatDate', payload);
+  }
 };

@@ -215,6 +215,9 @@ export default {
             minTime: 0
         }
     },
+    created(){
+        this.$store.dispatch('tickets/setFormatDate', this.formatDate);
+    },
     mounted() {   // After the page loaded mounted works
         const chosenNormalFlights = this.$store.getters['tickets/chosenFlightNormal'];
         const mergedChosenConnecting = this.$store.getters['tickets/mergedChosenConnecting'];

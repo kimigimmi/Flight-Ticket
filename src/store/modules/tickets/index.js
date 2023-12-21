@@ -334,7 +334,8 @@ export default {
 
             chosenFlightNormal: [],
             chosenFlightConnecting: [],
-            mergedChosenConnecting: []
+            mergedChosenConnecting: [],
+            formatDate: null
         }
     },
     mutations,

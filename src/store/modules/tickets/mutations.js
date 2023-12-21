@@ -8,4 +8,7 @@ export default {
      mergedChosenConnecting(state, payload){
         state.mergedChosenConnecting = payload;
      },
+     setFormatDate(state, payload) {
+      state.formatDate = payload;
+    }
 };

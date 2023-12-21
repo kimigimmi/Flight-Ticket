@@ -66,7 +66,9 @@ export default {
                detailVisible: false
           }
      },
-
+     created(){
+           this.$store.dispatch('tickets/setMidnightDateIncrease', this.midnightDateIncrease);   
+     },
      methods: {
           toggleDetail() {
                this.detailVisible = !this.detailVisible;

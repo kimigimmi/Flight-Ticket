@@ -10,5 +10,8 @@ export default {
     },
     mergedChosenConnecting(state){
         return state.mergedChosenConnecting;
-    }
+    },
+    getFormatDate(state) {
+        return state.formatDate;
+      }
 };

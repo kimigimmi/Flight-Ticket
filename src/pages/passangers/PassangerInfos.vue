@@ -13,7 +13,7 @@
                 <strong>
                     <span>{{ selectedFlight.from1 }}</span>
                     <span> --> </span>
-                    <span>{{ selectedFlight.to1 }}</span>
+                    <span>{{ selectedFlight.to2 }}</span>
                 </strong>
             </div>
             <div class="container">
@@ -35,11 +35,10 @@
                         <div class="identity-infos">
                           <ul>
                             <identity-items 
-                            :adultCount="selectedFlight.adultCount" 
-                            :babyCount="selectedFlight.babyCount"
-                            :planeImg="img"       
+                            :passengers="passengers"
                             :from="from"
                             :to="to"
+                            :planeImg="img"
                             ></identity-items>
                           </ul>
                         </div>
@@ -51,7 +50,9 @@
                              <div class="baggage-list">
                                 <ul>
                                  <baggage-items
-                                 :planeImg="img" 
+                                 @extraFacilities="updatePriceAndWeight"
+                                 :passengers="passengers"
+                                 :planeImg="img"
                                  ></baggage-items>
                                 </ul> 
                              </div>
@@ -61,12 +62,42 @@
                              <label>Total Amount</label>
                              <div><strong>{{ price }} TL</strong></div>
                           </div>  
-                          <button type="submit" class="continue-btn">Continue></button>
+                          <button type="submit" class="continue-btn">Continue</button>
                         </div>  
                     </form>
                 </div>
                 <div class="container-right">
-                    
+                    <summary-norm v-if="selectedFlight.name"
+                    :from="selectedFlight.from"
+                    :to="selectedFlight.to"
+                    :planeImg="selectedFlight.img"
+                    :planeName="selectedFlight.name"
+                    :departureTime="selectedFlight.departureTime"
+                    :arrivalTime="selectedFlight.arrivalTime"
+                    :classType="selectedFlight.class"
+                    :date="selectedFlight.date"
+                    :midnightDateIncrease="midnightDateIncrease"
+                    ></summary-norm>
+
+                    <summary-merged v-else-if="selectedFlight.name1"
+                    :from1="selectedFlight.from1"
+                    :from2="selectedFlight.from2"
+                    :to1="selectedFlight.to1"
+                    :to2="selectedFlight.to2"
+                    :planeImg1="selectedFlight.img1"
+                    :planeImg2="selectedFlight.img2"
+                    :planeName1="selectedFlight.name1"
+                    :planeName2="selectedFlight.name2"
+                    :departureTime1="selectedFlight.departureTime1"
+                    :departureTime2="selectedFlight.departureTime2"
+                    :arrivalTime1="selectedFlight.arrivalTime1"
+                    :arrivalTime2="selectedFlight.arrivalTime2"
+                    :classType1="selectedFlight.class1"
+                    :classType2="selectedFlight.class2"
+                    :date1="selectedFlight.date1"
+                    :date2="selectedFlight.date2"
+                    :midnightDateIncrease="midnightDateIncrease"
+                    ></summary-merged>
                 </div>
             </div>
         </div>
@@ -77,20 +108,28 @@
 <script>
 import IdentityItems from './passangerAuxiliaryComponents/IdentityItems.vue';
 import BaggageItems from './passangerAuxiliaryComponents/BaggageItems.vue';
+import SummaryNorm from './passangerAuxiliaryComponents/SummaryNorm.vue';
+import SummaryMerged from './passangerAuxiliaryComponents/SummaryMerged.vue';
 
 export default {
     components: {
         IdentityItems,
-        BaggageItems
+        BaggageItems,
+        SummaryNorm,
+        SummaryMerged
     },
     props: ['id'],
     data() {
         return {
-            selectedFlight: null,   // Sağdaki div'de eğer name varsa normal, name1 varsa merged olan bilgileri yazsın 
+            selectedFlight: null,   
+            adultNum: 0,
+            babyNum: 0,
             img: null,
             from: '',
-            to: '',
-            price: 0
+            to:'',
+            passengers: [],
+            price: 0,
+            previousExtraPrice: 0,
         }
     },
     created() {
@@ -104,20 +143,54 @@ export default {
             this.from = normalFlight.from;
             this.to = normalFlight.to;
             this.price = normalFlight.price;
+            this.adultNum = normalFlight.adultCount;
+            this.babyNum = normalFlight.babyCount;
         } else if (!normalFlight && mergedFlight) {
             this.selectedFlight = mergedFlight;
-            this.img = mergedFlight.img2;
+            this.img = mergedFlight.img1;
             this.from = mergedFlight.from1;
             this.to = mergedFlight.to2;
             this.price = mergedFlight.price1 + mergedFlight.price2;
+            this.adultNum = mergedFlight.adultCount;
+            this.babyNum = mergedFlight.babyCount;
         } else {
             this.selectedFlight = {};
         }
+
+        while (this.adultNum > 0 || this.babyNum > 0) {
+           let index=0;
+        if (this.adultNum > 0) {
+          this.passengers.push({passengerType: 'Adult', passengerIndex: index, passengerWeight: 0, passengerPrice: 0});
+          this.adultNum--;
+        } else if (this.babyNum > 0) {
+          this.passengers.push({passengerType: 'Baby', passengerIndex: index, passengerWeight: 0, passengerPrice: 0});
+          this.babyNum--;
+        }
+            index++;
+      }
+
     },
     methods: {
         SubmitForm() {
 
-        }
+        },
+        updatePriceAndWeight(data){     
+              this.passengers[data.selectedIndex].passengerPrice = data.extraPrice;
+              const totalExtraPrice = this.passengers.reduce((totalPrice, passenger) => totalPrice + passenger.passengerPrice, 0);
+              this.price += totalExtraPrice - this.previousExtraPrice;
+              this.previousExtraPrice = totalExtraPrice;
+              this.passengers[data.selectedIndex].passengerWeight = data.extraWeight;
+        },
+        midnightDateIncrease(newDate, arrivalTime, departureTime) { // Ay değişim muhabbeti(ayın 31'ine 1 ekle 32 oluyor) burada da var. Düzelt !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+               const arrivalInt = Math.floor(parseFloat(arrivalTime));   // Ayrıca bu method'u başka bi yerden çağırmam lazımdı, bak !!!!
+               const departureInt = Math.floor(parseFloat(departureTime));
+               if (departureInt > arrivalInt) {
+                    const dateArray = newDate.split('.');
+                    dateArray.splice(0, 1, (parseFloat(dateArray[0]) + 1));
+                    newDate = dateArray.join('.');
+               }
+               return newDate;
+          }
     }
 }
 
@@ -149,9 +222,8 @@ export default {
 }
 
 .container-right {
-    background: green;
     width: 50%;
-    height: 40px;
+    margin-left: 20px;
 }
 
 .communication-infos {
@@ -211,6 +283,7 @@ ul {
     margin: 10px 0 30px;
     font-size: 15px;
     padding: 10px 15px;
+    min-width: fit-content;
 }
 
 .baggage-header h4 {
