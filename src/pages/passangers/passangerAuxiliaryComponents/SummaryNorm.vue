@@ -1,6 +1,7 @@
 <template>
     <div class="flight-summary">
         <header>
+            <span><font-awesome-icon icon="fa-plane-departure" /></span>
             <span class="title">Outward Flight</span>
         </header>
         <div class="plane-name">
@@ -10,7 +11,10 @@
         <div class="flight-infos">
             <div class="departure-arrival-infos">
                 <header>
-                    <span class="title">Departure</span>
+                    <div class="properties-title">
+                        <span><font-awesome-icon icon="fa-solid fa-circle" /></span>
+                        <span class="title">Departure</span>
+                    </div>
                     <div class="flight-contents">
                         <span class="dprT-arrT">{{ departureTime }}</span>
                         <span class="flight-date-and-city">{{ formatDate((date)) }}</span>
@@ -20,7 +24,10 @@
             </div>
             <div class="departure-arrival-infos">
                 <header>
-                    <span class="title">Arrival</span>
+                    <div class="properties-title">
+                        <span><font-awesome-icon icon="fa-regular fa-circle" /></span>
+                        <span class="title">Arrival</span>
+                    </div>
                     <div class="flight-contents">
                         <span class="dprT-arrT arrT">{{ arrivalTime }}</span>
                         <span class="flight-date-and-city">{{ formatDate(midnightDateIncrease(date, arrivalTime, departureTime)) }}</span>
@@ -28,7 +35,10 @@
                     </div>
                 </header>
             </div>
-            <div class="flight-class plane-name">Flight class - {{ classType }}</div>
+            <div class="flight-class plane-name">
+                <span><font-awesome-icon icon="fa-ticket" /></span>
+                <span>Flight class - {{ classType }}</span>
+            </div>
         </div>
     </div>
 </template>
@@ -47,8 +57,8 @@ export default {
 }
 </script>
 
-<style>
-.flight-summary {
+<style>    /* Due it has the same styles with SummaryMerged component no usage of scope */
+.flight-summary { 
     border: 1px solid #999;
     border-radius: 5px;
     margin: 10px 0 30px;
@@ -60,6 +70,11 @@ header .title {
     font-weight: 700;
     font-size: 16px;
     color: #394240 !important;
+}
+
+header span:nth-child(1), .fa-ticket {
+    margin-right: 10px;
+    color: #53605e;
 }
 
 .plane-name {
@@ -81,7 +96,7 @@ header .title {
     background-color: #2dc44d;
     padding: 1px 7px;
     border-radius: 2px;
-    color: #fff;
+    color: #fff !important;
     margin-right: 0.5rem;
     font-size: 14px;
 }
@@ -100,6 +115,15 @@ header .title {
 
 .departure-arrival-infos {
     margin-top: 5px;
+}
+
+.flight-contents {
+    margin-left: 30px;
+}
+
+.fa-circle {
+    width: 13px;
+    color: #1E90FF;
 }
 
 .flight-class {

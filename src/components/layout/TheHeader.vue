@@ -8,11 +8,11 @@
             </div>
             <ul>
                 <li>
-                    <router-link to="/ticket">Plane Ticket</router-link>
+                    <router-link to="/ticket" class="special-link">Plane Ticket</router-link>
                 </li>
                 <button>...</button> <!--Aşağı doğru farklı linkler açılacak-->
                 <li>
-                    <router-link to="/coaches">Login</router-link>
+                    <router-link to="/login" class="special-link">Login</router-link>
                 </li>
             </ul>
         </nav>
@@ -23,7 +23,6 @@
 <style scoped>
 header {
     width: 100%;
-    /* min-width:  ??????????????????????????????????? */
     height: 5rem;
     background-color: #0366a8;
     display: flex;
@@ -39,9 +38,9 @@ header a {
     border: 1px solid transparent;
 }
 
-a:active,
-a:hover,
-a.router-link-active {
+.special-linl:active,
+.special-link:hover,
+.special-link.router-link-active {
     border: 1px solid #f391e3;
 }
 

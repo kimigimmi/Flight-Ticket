@@ -23,19 +23,39 @@
         <div class="planes-row">
             <div class="filter-column">
                 <div class="favorite-search search">
-                    <button class="favorite-search-add-btn">Add The Search To Favorites</button>
+                    <button class="favorite-search-add-btn favourite-search-and-price-alert-btn">
+                        <span class="icon-joint-features"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="24" fill="none" stroke="#888888" stroke-width="2">
+                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C15.09 3.81 16.76 3 18.5 3 21.58 3 24 5.42 24 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                          </svg>
+                       </span>
+                       <span>Add The Search To Favourites</span>
+                    </button>
                 </div>
                 <div class="price-alert search">
-                    <button class="price-alert-btn">Create Price Alarm</button>
+                    <button class="price-alert-btn favourite-search-and-price-alert-btn">
+                        <span class="icon-joint-features"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-alarm" viewBox="0 0 16 16"> 
+                            <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9V5.5z"/> 
+                            <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1h-3zm1.038 3.018a6.093 6.093 0 0 1 .924 0 6 6 0 1 1-.924 0zM0 
+                            3.5c0 .753.333 1.429.86 1.887A8.035 8.035 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5zM13.5 1c-.753 0-1.429.333-1.887.86a8.035 8.035 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1z"/> </svg>
+                       </span>
+                       <span>Create Price Alarm</span>
+                    </button>
                 </div>
                 <div class="filter-accordion">
                     <div class="filter-header">
                         <div class="filter-header-title">Filter</div>
                         <div class="filter-header-clear">Clear</div>
                     </div>
-                    <div class="filter-card">
-                        <div class="transfer-header filter-type">Transferring</div>
-                        <div class="transfer-options">
+                    <div class="filter-card">         
+                        <div @click="toggleOptions('transferItems')" class="transfer-header filter-type">
+                            <div>
+                               <span class="icon-joint-features"><font-awesome-icon icon="fa-solid fa-flag" /></span>
+                               <span>Transferring</span>
+                            </div>
+                            <span v-if="!transferItems"><img class="expand_icon" src="@/assets/expand_more_icon.png"></span>
+                            <span v-else-if="transferItems"><img class="expand_icon" src="@/assets/expand_less_icon.png"></span>
+                        </div>
+                        <div v-if="transferItems" class="transfer-options">
                             <div class="transfer-direct-option flight-option">
                                 <input type="checkbox" name="direct-flights" v-model="directChecked">
                                 <label for="direct-flights">Direct Flights</label>
@@ -47,38 +67,66 @@
                         </div>
                     </div>
                     <div class="filter-card ">
-                        <div class="filter-type">Ticket Price</div>
-                        <div class="price-filter">
-                            <div class="price-value">
+                        <div @click="toggleOptions('ticketPriceItems')" class="filter-type">
+                            <div>
+                               <span class="icon-joint-features"><font-awesome-icon :icon="'fas fa-poll'" /></span>
+                               <span>Ticket Price</span>
+                            </div>
+                            <span v-if="!ticketPriceItems"><img class="expand_icon" src="@/assets/expand_more_icon.png"></span>
+                            <span v-else-if="ticketPriceItems"><img class="expand_icon" src="@/assets/expand_less_icon.png"></span>
+                        </div>
+                        <div v-if="ticketPriceItems" class="price-and-time-filter">
+                            <div class="price-and-time-value">
                                 <div>Maximum Price :</div>
                                 <div class="rangeValue">{{ priceValue }}</div>
                             </div>
                             <div>
                                 <input type="range" id="price-slider" :value="priceValue" :min="minPrice" :max="maxPrice"
-                                    @input="rangePrice"> <!--max yerine max price gelecek-->
+                                    @input="rangePrice"> 
                             </div>
                         </div>
                     </div>
                     <div class="filter-card ">
-                        <div class="filter-type">Departure/Arrival Times</div>
-                        <div>Alt divi</div>
+                        <div @click="toggleOptions('departureArrivalTimeItems')" class="filter-type">
+                            <div>
+                               <span class="icon-joint-features"><font-awesome-icon icon="fa-clock" /></span>
+                               <span>Departure/Arrival Times</span>
+                            </div>   
+                            <span v-if="!departureArrivalTimeItems"><img class="expand_icon" src="@/assets/expand_more_icon.png"></span>
+                            <span v-else-if="departureArrivalTimeItems"><img class="expand_icon" src="@/assets/expand_less_icon.png"></span>
+                        </div>
+                        <div v-if="departureArrivalTimeItems">Alt divi</div>
                     </div>
                     <div class="filter-card ">
-                        <div class="filter-type">Flight Time</div>
-                        <div class="price-filter">
-                            <div class="price-value">
+                        <div @click="toggleOptions('flightTimeItems')" class="filter-type">
+                            <div>
+                               <span class="icon-joint-features"><font-awesome-icon icon="fa-clock" /></span>
+                               <span>Flight Time</span>
+                            </div>   
+                            <span v-if="!flightTimeItems"><img class="expand_icon" src="@/assets/expand_more_icon.png"></span>
+                            <span v-else-if="flightTimeItems"><img class="expand_icon" src="@/assets/expand_less_icon.png"></span>
+                        </div>
+                        <div v-if="flightTimeItems" class="price-and-time-filter">
+                            <div class="price-and-time-value">
                                 <div>Maximum Time :</div>
                                 <div class="rangeValue">{{ timeValue }}</div>
                             </div>
                             <div>
                                 <input type="range" id="price-slider" :value="timeValue" :min="minTime" :max="maxTime"
-                                    :step="0.01" @input="rangeTime"> <!--max yerine max price gelecek-->
+                                    :step="0.01" @input="rangeTime"> 
                             </div>
                         </div>
                     </div>
                     <div class="filter-card ">
-                        <div class="filter-type">AirWays</div>
-                        <div v-if="airways && airways.length > 0">
+                        <div @click="toggleOptions('airWayItems')" class="filter-type">
+                            <div>
+                               <span class="icon-joint-features"><font-awesome-icon icon="fa-solid fa-plane-up" /></span>
+                               <span>AirWays</span>
+                            </div>   
+                            <span v-if="!airWayItems"><img class="expand_icon" src="@/assets/expand_more_icon.png"></span>
+                            <span v-else-if="airWayItems"><img class="expand_icon" src="@/assets/expand_less_icon.png"></span>
+                        </div>
+                        <div v-if="airways && airways.length > 0 && airWayItems">
                             <ul>
                                 <li v-for="plane in airways" :key="plane">
                                     <div class="transfer-direct-option flight-option">
@@ -105,11 +153,21 @@
                         <div class="header-summary">Kaç uçuştan kaçi gösteriliyor</div>
                         <div class="result-sorting">
                             <div class="cheaper sorting-option sub-result-sorting" @click="sortingCheapest()"
-                                :class="{ 'selected': selectedSortingOption === 'cheapest' }">The Cheapest</div>
+                                :class="{ 'selected': selectedSortingOption === 'cheapest' }">
+                                <span v-if="selectedSortingOption === 'cheapest'"><font-awesome-icon icon="fa-check" /></span>
+                                <span>The Cheapest</span>
+                            </div>
                             <div class="faster sorting-option sub-result-sorting" @click="sortingFastest()"
-                                :class="{ 'selected': selectedSortingOption === 'fastest' }">The Fastest</div>
+                                :class="{ 'selected': selectedSortingOption === 'fastest' }">
+                                <span v-if="selectedSortingOption === 'fastest'"><font-awesome-icon icon="fa-check" /></span>
+                                <span>The Fastest</span>
+                            </div>
                             <div class="more-option sub-result-sorting" @click="moreClick">
-                                <div class="sorting-option" :class="{ 'selected': selectedSortingOption === 'more' }">More
+                                <div class="sorting-option" :class="{ 'selected': selectedSortingOption === 'more' }">
+                                    <span v-if="selectedSortingOption === 'more'"><font-awesome-icon icon="fa-check" /></span>
+                                    <span v-if="selectedSortingOption !=='more'"><img class="more-icon" src="@/assets/more.png" alt="Menu Icon"></span>
+                                    <span>More</span>
+                                    <span><img class="expand_icon" src="@/assets/expand_more_icon.png"></span>
                                 </div>
                                 <div v-if="moreClicked" class="select-box-alternative">
                                     <div @click="earlyLate('departureEarly')">Departure early to late</div>
@@ -212,7 +270,12 @@ export default {
             minPrice: 0,
             timeValue: 1000000,
             maxTime: 0,
-            minTime: 0
+            minTime: 0,
+            transferItems: false,
+            ticketPriceItems: false,
+            departureArrivalTimeItems: false,
+            flightTimeItems: false,
+            airWayItems: false
         }
     },
     created(){
@@ -556,6 +619,19 @@ export default {
                     As a result we used 3 different methods to change object sorting of the arrays in computed section  */
                 }
             }
+        },
+        toggleOptions(activeItem){
+            if(activeItem === 'transferItems') {
+                this.transferItems = !this.transferItems;   // veya this[option] = !this[option]  
+            } else if(activeItem === 'ticketPriceItems') {
+                this.ticketPriceItems = !this.ticketPriceItems;
+            } else if(activeItem === 'departureArrivalTimeItems') {
+                this.departureArrivalTimeItems = !this.departureArrivalTimeItems;
+            } else if(activeItem === 'flightTimeItems' ) {
+                this.flightTimeItems = !this.flightTimeItems;
+            } else if(activeItem === 'airWayItems') {
+                this.airWayItems = !this.airWayItems;
+            }
         }
     }
 }
@@ -582,6 +658,9 @@ export default {
     padding: 8px 12px;
 }
 
+.fa-plane-up, .fa-flag, .fa-poll, .fa-clock {
+    color :#53605e;
+}
 .short-info-part span:first-child,
 .short-info-part span:nth-child(2) {
     font-weight: bold;
@@ -670,6 +749,21 @@ export default {
     margin-right: 10px;
 }
 
+.fa-check {
+    margin-right: 10px;
+}
+
+
+.more-icon { 
+    width: 10px;
+    margin-right: 6px;
+}
+
+.expand_icon {
+    width: 17px;
+    margin-left: 5px;
+}
+
 .select-box-alternative {
     width: 14%;
     text-align: left;
@@ -715,6 +809,7 @@ export default {
 .flight-list-heading div {
     flex: 1;
     /* Eşit genişlik ayarlama */
+    color: #1b2f6fc9;
 }
 
 ul {
@@ -733,36 +828,36 @@ ul {
     margin-bottom: 5px;
 }
 
-.favorite-search-add-btn {
+.icon-joint-features {
+    margin-right: 5px;
+}
+
+.favourite-search-and-price-alert-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 15px;
     font-weight: 800;
     font-style: normal;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     letter-spacing: .5px;
-    color: rgb(19, 23, 23);
     width: 100%;
     outline: none;
     background-color: rgb(255, 255, 255);
     border: none;
     border-radius: 4px;
-    height: 36px;
-    padding: 0px 10px;
     cursor: pointer;
 }
 
+.favorite-search-add-btn {
+    color: rgb(19, 23, 23);
+    height: 36px;
+    padding: 0px 10px;
+}
+
 .price-alert-btn {
-    font-size: 15px;
-    font-weight: 800;
-    font-style: normal;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    letter-spacing: .5px;
-    width: 100%;
-    background-color: rgb(255, 255, 255);
-    border: none;
     color: #2dc44d;
     height: 36px;
-    cursor: pointer;
-    border-radius: 4px;
 }
 
 .filter-accordion {
@@ -816,15 +911,17 @@ label {
 }
 
 .filter-type {
+    display: flex;
+    justify-content: space-between;
     margin: 5px 0;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
-.price-filter {
+.price-and-time-filter {  
     width: 100%;
 }
 
-.price-value {
+.price-and-time-value {
     display: flex;
     justify-content: space-between;
     color: #626c6a;
@@ -836,4 +933,8 @@ input[type="range"] {
     margin: 0;
     /* İnput'un kenar boşluklarını sıfırlamak için */
     cursor: pointer;
-}</style>
+}
+
+
+
+</style>

@@ -1,11 +1,12 @@
 <template>
      <div class="flight-summary">
+          <font-awesome-icon icon="fa-solid fa-plane" />
           <div class="flight-summary-infos">
                <div class="flight-summary-elements">
                     <div class="flight-summaries">
                          <div class="flight-summary-airline">
                               <img :src="img">
-                              <span>{{ planeName }}</span>
+                              <span class="mutual-color">{{ planeName }}</span>
                          </div>
                          <div class="flight-city-codes">
                               <span>{{ city_code_from }} > </span>
@@ -13,7 +14,10 @@
                          </div>
                     </div>
                     <div class="flight-summary-promo flight-summaries">
-                         <div>1x15 kg</div>
+                         <div>
+                              <span><font-awesome-icon icon="fa-briefcase" /></span>
+                              <span>1x15 kg</span>
+                         </div>
                          <div>Direct Flight</div>
                     </div>
                     <div class="flight-summary-time">
@@ -21,6 +25,7 @@
                               {{ departureTime }} --> {{ arrivalTime }}
                          </div>
                          <div class="total-flight-time">
+                              <span><font-awesome-icon icon="fa-clock" /></span>
                               <span>{{ totalTime(departureTime, arrivalTime) }}</span>
                          </div>
                     </div>
@@ -49,7 +54,10 @@
                          <span>{{ formatDate(midnightDateIncrease(date)) }} - </span>
                          <span>{{ to }}</span>
                     </div>
-                    <div>{{ roomService(planeName) }}</div>
+                    <div>
+                         <span><font-awesome-icon :icon="'fas fa-concierge-bell'" class="custom-bell-icon" /></span>
+                         <span>{{ roomService(planeName) }}</span>
+                    </div>
                </div>
 
           </div>
@@ -103,17 +111,30 @@ export default {
 
 <style scoped>       /* İki sub-component'te de birçok style özelliği aynı, bunları teke indir !!!!!!!!!!!!!!!!!!!!!!! */
 .flight-summary {
-     border: solid 1px black;
+     border: solid 1px #a5a5a5;
+     box-shadow: 2px 2px 10px rgba(196, 196, 196, 0.3), -2px -2px 1px rgba(191, 191, 191, 0.3); /* From both sides */
      margin-bottom: 10px;
      cursor: pointer;
      min-width: 40rem;
      font-size: 14px;
 }
 
+.fa-plane {
+    position: relative;
+    top: -18px;
+    left: 50%;
+    color: #53605e; 
+    width: 15px;
+}
+
+span {
+     color: #53605e; 
+}
+
 .flight-summary-infos {
      display: flex;
      justify-content: space-between;
-     padding: 10px 20px;
+     padding: 0 20px;
 }
 
 .flight-summary-elements {
@@ -122,7 +143,7 @@ export default {
 }
 
 .flight-summary:hover {
-     background: rgb(212, 210, 210);
+     background: rgb(241, 249, 240);
 }
 
 .flight-summaries {
@@ -152,6 +173,11 @@ export default {
 
 .flight-summary-promo {
      margin-left: 9.5rem;
+}
+
+.fa-briefcase {
+     margin-right: 7px;
+     color: #53605e;
 }
 
 .flight-summary-promo div:nth-child(2) {
@@ -205,6 +231,11 @@ export default {
      border: none;
      margin: 10px 0 10px 22px;
      cursor: grab;
+}
+
+.custom-bell-icon {
+     color: orange;
+     margin-right: 5px;
 }
 
 .segment-detail {

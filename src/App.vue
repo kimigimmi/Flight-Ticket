@@ -18,7 +18,7 @@ export default {
 
 
 * {
-  box-sizing: border-box;
+  box-sizing: border-box;   /* Style'larda border kısımları yokmuş gibi davranır. Örneğin width: 100% yapınca border da varsa border yüzünden ekrana sığmaz. border-box kullanırsak sığdırır */
 }
 
 html {

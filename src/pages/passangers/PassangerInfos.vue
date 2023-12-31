@@ -16,19 +16,30 @@
                     <span>{{ selectedFlight.to2 }}</span>
                 </strong>
             </div>
-            <div class="container">
+            <div class="container">              <!--Form is here !!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
                 <div class="container-left">
                     <form @submit.prevent="submitForm">
                         <div class="communication-infos">
-                            <div class="communication-infos-title">Communication Informations</div>
+                            <div class="communication-infos-title">
+                                <span><font-awesome-icon icon="fa-address-card" /></span>
+                                <span>Communication Infos</span>
+                            </div>
                             <div class="communication-infos-context">
                                 <div class="context">
                                     <div class="e-mail input-title">E-mail Adress</div>
-                                    <input type="e-mail" class="e-mail" id="e-mail" placeholder="Enter e-mail adress">
+                                    <input type="e-mail" class="e-mail" id="e-mail" placeholder="Enter e-mail adress" 
+                                       v-model.trim="eMail.val"
+                                       @blur="clearValidity('eMail')">
+                                    <p v-if="!eMail.isValid" class="invalid">Please fill the empty field</p>
+                                    
                                 </div>
                                 <div class="context">
                                     <div class="phone-number input-title">Phone Number</div>
-                                    <input type="tel" class="phone-number" id="phone-number" placeholder="Enter phone number">
+                                    <input type="tel" class="phone-number" id="phone-number" placeholder="Enter phone number" 
+                                       v-model.trim="phoneNo.val"
+                                       @blur="clearValidity('phoneNo')">
+                                    <p v-if="!phoneNo.isValid" class="invalid">Please fill the empty field</p>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -39,12 +50,16 @@
                             :from="from"
                             :to="to"
                             :planeImg="img"
+                            :submit-click="submitClick"
                             ></identity-items>
                           </ul>
                         </div>
                         <div class="baggage-limit">
                              <div class="baggage-header">
-                                <h4>Increase baggage limit</h4>
+                                <div class="baggage-increase">
+                                  <span><font-awesome-icon icon="fa-briefcase" /></span>
+                                  <span><h4>Increase baggage limit</h4></span>
+                                </div>
                                 <p>Do not pay high amount to your baggage in airport. Increase your baggage allowance now with a price advantage of up to 50%. </p>
                              </div>
                              <div class="baggage-list">
@@ -130,6 +145,16 @@ export default {
             passengers: [],
             price: 0,
             previousExtraPrice: 0,
+            submitClick: false,
+            eMail: {
+                val: '',
+                isValid: true
+            },
+            phoneNo: {
+                val: '',
+                isValid: true
+            },
+            formIsValid: true
         }
     },
     created() {
@@ -171,8 +196,26 @@ export default {
 
     },
     methods: {
-        SubmitForm() {
-
+        submitForm() {
+            this.submitClick = true;
+            this.validateForm();
+            if (!this.formIsValid) {
+                return;
+            }
+        },
+        clearValidity(input) {
+            this[input].isValid = true;
+        },
+        validateForm() {
+            this.formIsValid = true;
+            if (this.eMail.val === '') {
+                this.eMail.isValid = false;
+                this.formIsValid = false;
+            }
+            if (this.phoneNo.val === '') {
+                this.phoneNo.isValid = false;
+                this.formIsValid = false;
+            }
         },
         updatePriceAndWeight(data){     
               this.passengers[data.selectedIndex].passengerPrice = data.extraPrice;
@@ -238,6 +281,21 @@ export default {
     color: #53605e !important;
 }
 
+.communication-infos-title span:nth-child(1) {
+   margin-right: 7px;
+   color: #1E90FF;
+}
+
+.baggage-increase {
+    display: flex;
+    align-items: center;
+}
+
+.baggage-increase span:nth-child(1) {
+    font-size: 25px;
+    margin-right: 10px;
+}
+
 .communication-infos-context {
     width: 100%;
     display: flex;
@@ -281,6 +339,7 @@ ul {
     border: 1px solid #999;
     border-radius: 5px;
     margin: 10px 0 30px;
+    background-color: #f7fcff;
     font-size: 15px;
     padding: 10px 15px;
     min-width: fit-content;
@@ -333,4 +392,11 @@ ul {
 .total-amount label {
     color: #53605e
 }
+
+.invalid {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+  }
+
 </style>

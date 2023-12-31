@@ -1,6 +1,7 @@
 <template>
    <div class="flight-summary">
        <header>
+           <span><font-awesome-icon icon="fa-plane-departure" /></span>
            <span class="title">Outward Flight</span>
        </header>
        <div class="plane-name">
@@ -28,13 +29,12 @@
                    </div>
                </header>
            </div>
-           <div class="flight-class plane-name">Flight class - {{ classType1 }}</div>
+           <div class="flight-class plane-name">
+                <span><font-awesome-icon icon="fa-ticket" /></span>
+                <span>Flight class - {{ classType1 }}</span>
+            </div>
        </div>
-
-       <br>
-       <hr>
-       <br>
-
+       <br> <hr> <br>
        <div class="plane-name">
            <img :src="planeImg2">
            <span>{{ planeName2 }}</span>
@@ -42,6 +42,7 @@
        <div class="flight-infos">
            <div class="departure-arrival-infos">
                <header>
+                   
                    <span class="title">Departure</span>
                    <div class="flight-contents">
                        <span class="dprT-arrT">{{ departureTime2 }}</span>
@@ -60,7 +61,10 @@
                    </div>
                </header>
            </div>
-           <div class="flight-class plane-name">Flight class - {{ classType2 }}</div>
+           <div class="flight-class plane-name">
+                <span><font-awesome-icon icon="fa-ticket" /></span>
+                <span>Flight class - {{ classType2 }}</span>
+            </div>
        </div>
    </div>
 </template>

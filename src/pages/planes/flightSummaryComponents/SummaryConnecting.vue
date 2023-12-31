@@ -1,5 +1,6 @@
 <template>
     <div class="flight-summary">
+        <font-awesome-icon icon="fa-solid fa-plane" />
         <div class="flight-summary-infos">
             <div class="flight-summary-elements">
                 <div class="flight-summaries multiple-summaries">
@@ -22,7 +23,10 @@
                 </div>
 
                 <div class="flight-summary-promo flight-summaries">
-                    <div>1x15 kg</div>
+                    <div>
+                        <span><font-awesome-icon icon="fa-briefcase" /></span>
+                        <span>1x15 kg</span>
+                    </div>
                     <div>Connecting Flight</div>
                 </div>
                 <div class="flight-summary-time">
@@ -58,7 +62,10 @@
                     <span>{{ formatDate(midnightDateIncrease(date1, arrivalTime1, departureTime1)) }} - </span>
                     <span>{{ to1 }}</span>
                 </div>
-                <div>{{ roomService(planeName1) }}</div>
+                    <div>
+                         <span><font-awesome-icon :icon="'fas fa-concierge-bell'" class="custom-bell-icon" /></span>
+                         <span>{{ roomService(planeName1) }}</span>
+                    </div>
             </div>
             <br>
             <div class="line">
@@ -83,7 +90,10 @@
                     <span>{{ formatDate(midnightDateIncrease(date2, arrivalTime2, departureTime2)) }} - </span>
                     <span>{{ to2 }}</span>
                 </div>
-                <div>{{ roomService(planeName2) }}</div>
+                    <div>
+                         <span><font-awesome-icon :icon="'fas fa-concierge-bell'" class="custom-bell-icon" /></span>
+                         <span>{{ roomService(planeName2) }}</span>
+                    </div>
             </div>
 
         </div>
@@ -136,17 +146,26 @@ export default {
 
 <style scoped>
 .flight-summary {
-    border: solid 1px black;
+    border: solid 1px #ccd1cf;
+    box-shadow: 2px 2px 10px rgba(196, 196, 196, 0.3), -2px -2px 1px rgba(191, 191, 191, 0.3);
     margin-bottom: 10px;
     cursor: pointer;
     min-width: 40rem;
     font-size: 14px;
 }
 
+.fa-plane {
+    position: relative;
+    top: -18px;
+    left: 50%;
+    color: #53605e; 
+    width: 15px;
+}
+
 .flight-summary-infos {
     display: flex;
     justify-content: space-between;
-    padding: 10px 20px;
+    padding: 0 20px;
 }
 
 .flight-summary-elements {
@@ -155,7 +174,7 @@ export default {
 }
 
 .flight-summary:hover {
-    background: rgb(212, 210, 210);
+    background: rgb(241, 249, 240);
 }
 
 .flight-summaries {
@@ -188,6 +207,11 @@ export default {
 
 .flight-summary-promo {
     margin-left: 9.5rem;
+}
+
+.fa-briefcase {
+     margin-right: 7px;
+     color: #53605e;
 }
 
 .flight-summary-promo div:nth-child(2) {
@@ -238,6 +262,11 @@ export default {
     border: none;
     margin: 10px 0 10px 22px;
     cursor: grab;
+}
+
+.custom-bell-icon {
+     color: orange;
+     margin-right: 5px;
 }
 
 .segment-detail {

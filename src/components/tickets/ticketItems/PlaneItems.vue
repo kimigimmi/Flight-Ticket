@@ -1,40 +1,46 @@
 <template >
     <div class="container">
-        <form @submit.prevent="submitForm">
+        <form @submit.prevent="searchTicket">
             <div class="input-group">
                 <div class="form-group">
                     <label for="from">From</label>
-                    <input type="text" id="from" placeholder="Enter the city from" v-model.trim="from.val">
+                    <div class="input-container">
+                        <input type="text" id="from" placeholder="Enter the city from" v-model.trim="from.val" required>
+                        <span class="input-icons"><font-awesome-icon icon="fa-crosshairs" /></span>
+                    </div>
                 </div>
-
 
                 <div class="form-group">
                     <label for="to">To</label>
-                    <input type="text" id="to" placeholder="Enter the city to" v-model.trim="to.val" />
+                    <div class="input-container">
+                        <input type="text" id="to" placeholder="Enter the city to" v-model.trim="to.val" required/>
+                        <span class="input-icons"><font-awesome-icon icon="fa-solid fa-location-dot" /></span>
+                    </div>
                 </div>
             </div>
 
             <div class="input-group">
                 <div class="form-group">
                     <label for="departure-date">Date of Departure</label>
-                    <input type="text" id="departure-date" placeholder="" v-model.trim="dateOfDeparture.val" />
+                    <input type="date" name="licence_date" id="licence_date" v-model="this.dateOfDeparture.val">
+
                 </div>
                 <div class="form-group">
                     <div class="c-box-section">
                         <label for="return-date" id="return-label">Date of Return</label>
-                        <div class="one-way-box">
-                            <input type="checkbox" value="oneWay" v-model="oneWay.val">
+                        <div class="one-way-box check-box">
+                            <input type="checkbox" checked value="oneWay" v-model="oneWay.val">
                             <label>One Way</label>
                         </div>
                     </div>
-                    <input type="text" id="return-date" v-model.trim="dateOfReturn.val" />
+                    <input type="text" id="return-date" v-model.trim="dateOfReturn.val" readonly disabled/>
                 </div>
             </div>
 
             <div class="input-group">
                 <div class="form-group">
                     <div class="c-box-section">
-                        <div class="direct-box">
+                        <div class="direct-box check-box">
                             <input type="checkbox" value="direct-flight" v-model="onlyDirectFlight.val">
                             <label>Direct Flight</label>
                         </div>
@@ -70,7 +76,7 @@ export default {
                 isValid: true
             },
             oneWay: {
-                val: '',
+                val: true,
                 isValid: true
             },
             onlyDirectFlight: {
@@ -84,9 +90,19 @@ export default {
 
         }
     },
-
     methods: {
-        submitForm() {  // Seçtiğin class'a göre price belirle !!!!!!!!!!!!!!!!!!!!!!!!!!!
+        formattedDateOfDeparture() {
+            console.log(this.dateOfDeparture.val)
+            if (!this.dateOfDeparture.val) {
+                return '';
+            }
+            const date = new Date(this.dateOfDeparture.val);
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}.${month}.${year}`;
+        },
+        searchTicket() {  // Seçtiğin class'a göre price belirle !!!!!!!!!!!!!!!!!!!!!!!!!!!
             const flightInfos = this.$store.getters['tickets/flightInfos'];
 
             this.$store.dispatch('tickets/chosenFlightNormal', []); // Initialize at the start in case avoiding the last choice
@@ -99,7 +115,7 @@ export default {
                     if (
                         flight.from === this.from.val &&
                         flight.to === this.to.val &&
-                        flight.date === this.dateOfDeparture.val &&
+                        flight.date === this.formattedDateOfDeparture() &&
                         this.passangerCount <= flight[this.class]
                     ) {
                         chosenNormalFlights.push({                // Bu şekilde yapmayınca index.js'teki flightInfos içeriği değişiyor.
@@ -129,74 +145,74 @@ export default {
                 // Aktarmalı uçuş kısmı :
                 //!!!!!!!! Aktarmalı olan uçuşta aynı güne ait olan uçuşlardan 2.uçuşun saati 1.uçuştan önce ise onu ekleme 
                 let chosenConnectingFlights = [];
-                if(!this.onlyDirectFlight.val) { 
-                const fromObjs = flightInfos.filter(fromValue => {
-                    return fromValue.from === this.from.val && fromValue.date === this.dateOfDeparture.val && this.passangerCount <= fromValue[this.class]
-                });
-                const toObjs = flightInfos.filter(toValue => {
-                    return toValue.to === this.to.val && (toValue.date === this.dateOfDeparture.val || parseFloat(toValue.date.substring(0, 4)) === parseFloat(this.dateOfDeparture.val.substring(0, 4)) + 1)
-                        && this.passangerCount <= toValue[this.class]
-                });
-
-                if (fromObjs && fromObjs.length > 0 && toObjs && toObjs.length > 0) {
-                    const matchingFromValues = fromObjs.filter(fromFlight => {
-                        return toObjs.some(toFlight => fromFlight.to === toFlight.from)
+                if (!this.onlyDirectFlight.val) {
+                    const fromObjs = flightInfos.filter(fromValue => {
+                        return fromValue.from === this.from.val && fromValue.date === this.formattedDateOfDeparture() && this.passangerCount <= fromValue[this.class]
+                    });
+                    const toObjs = flightInfos.filter(toValue => {
+                        return toValue.to === this.to.val && (toValue.date === this.formattedDateOfDeparture() || parseFloat(toValue.date.substring(0, 4)) === parseFloat(this.formattedDateOfDeparture().substring(0, 4)) + 1)
+                            && this.passangerCount <= toValue[this.class]
                     });
 
-                    const matchingToValues = toObjs.filter(toFlight => {
-                        return fromObjs.some(fromFlight => toFlight.from === fromFlight.to)
-                    });
+                    if (fromObjs && fromObjs.length > 0 && toObjs && toObjs.length > 0) {
+                        const matchingFromValues = fromObjs.filter(fromFlight => {
+                            return toObjs.some(toFlight => fromFlight.to === toFlight.from)
+                        });
 
-                    const fromValues = [];
-                    const toValues = [];
+                        const matchingToValues = toObjs.filter(toFlight => {
+                            return fromObjs.some(fromFlight => toFlight.from === fromFlight.to)
+                        });
 
-                    for (let i = 0; i < matchingFromValues.length; i++) {
-                        fromValues.push({
-                            passangerCount: this.passangerCount,
-                            adultCount: this.adultCount,
-                            babyCount: this.babyCount,
-                            class: this.class,
-                            id: matchingFromValues[i].id,
-                            name: matchingFromValues[i].name,
-                            img: matchingFromValues[i].img,
-                            date: matchingFromValues[i].date,
-                            from: matchingFromValues[i].from,
-                            to: matchingFromValues[i].to,
-                            city_code_from: matchingFromValues[i].city_code_from,
-                            city_code_to: matchingFromValues[i].city_code_to,
-                            departureTime: matchingFromValues[i].departureTime,
-                            arrivalTime: matchingFromValues[i].arrivalTime,
-                            price: matchingFromValues[i].price,
-                        })
+                        const fromValues = [];
+                        const toValues = [];
 
-                    }
+                        for (let i = 0; i < matchingFromValues.length; i++) {
+                            fromValues.push({
+                                passangerCount: this.passangerCount,
+                                adultCount: this.adultCount,
+                                babyCount: this.babyCount,
+                                class: this.class,
+                                id: matchingFromValues[i].id,
+                                name: matchingFromValues[i].name,
+                                img: matchingFromValues[i].img,
+                                date: matchingFromValues[i].date,
+                                from: matchingFromValues[i].from,
+                                to: matchingFromValues[i].to,
+                                city_code_from: matchingFromValues[i].city_code_from,
+                                city_code_to: matchingFromValues[i].city_code_to,
+                                departureTime: matchingFromValues[i].departureTime,
+                                arrivalTime: matchingFromValues[i].arrivalTime,
+                                price: matchingFromValues[i].price,
+                            })
 
-                    for (let i = 0; i < matchingToValues.length; i++) {
-                        toValues.push({
-                            passangerCount: this.passangerCount,
-                            adultCount: this.adultCount,
-                            babyCount: this.babyCount,
-                            class: this.class,
-                            id: matchingToValues[i].id,
-                            name: matchingToValues[i].name,
-                            img: matchingToValues[i].img,
-                            date: matchingToValues[i].date,
-                            from: matchingToValues[i].from,
-                            to: matchingToValues[i].to,
-                            city_code_from: matchingToValues[i].city_code_from,
-                            city_code_to: matchingToValues[i].city_code_to,
-                            departureTime: matchingToValues[i].departureTime,
-                            arrivalTime: matchingToValues[i].arrivalTime,
-                            price: matchingToValues[i].price,
-                        })
-                    }
+                        }
 
-                    if (fromValues && toValues && fromValues.length > 0 && toValues.length > 0) {
-                        chosenConnectingFlights.push(fromValues);
-                        chosenConnectingFlights.push(toValues);
+                        for (let i = 0; i < matchingToValues.length; i++) {
+                            toValues.push({
+                                passangerCount: this.passangerCount,
+                                adultCount: this.adultCount,
+                                babyCount: this.babyCount,
+                                class: this.class,
+                                id: matchingToValues[i].id,
+                                name: matchingToValues[i].name,
+                                img: matchingToValues[i].img,
+                                date: matchingToValues[i].date,
+                                from: matchingToValues[i].from,
+                                to: matchingToValues[i].to,
+                                city_code_from: matchingToValues[i].city_code_from,
+                                city_code_to: matchingToValues[i].city_code_to,
+                                departureTime: matchingToValues[i].departureTime,
+                                arrivalTime: matchingToValues[i].arrivalTime,
+                                price: matchingToValues[i].price,
+                            })
+                        }
+
+                        if (fromValues && toValues && fromValues.length > 0 && toValues.length > 0) {
+                            chosenConnectingFlights.push(fromValues);
+                            chosenConnectingFlights.push(toValues);
+                        }
                     }
                 }
-            }
 
                 this.$store.dispatch('tickets/chosenFlightConnecting', chosenConnectingFlights);
 
@@ -288,9 +304,40 @@ export default {
      margin-top: 2px;
  }
 
- input[type=checkbox] {
-     margin-right: 5px;
+input[type=date] {
+    flex: 1;
+    padding: 0 5px;
+    cursor: pointer;
+}
+
+/* Target the calendar icon */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  font-size: 18px;
+  cursor: pointer;
+}
+ .check-box {
+    display: flex;
+    align-items: center;
  }
+
+.check-box label {
+    margin-left: 6px;
+}
+
+ .input-container {
+     position: relative;
+     display: flex;
+ }
+
+ .input-icons {
+     position: absolute;
+     top: 50%;
+     right: 8px;
+     transform: translateY(-50%);
+     color: rgb(12, 20, 133); 
+     cursor: text;
+ }
+
 
  .one-way-box {
      margin-left: auto;

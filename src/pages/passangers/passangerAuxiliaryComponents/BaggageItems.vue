@@ -56,6 +56,7 @@ export default {
     padding: 10px;
     border-radius: 5px;
     margin-bottom: 15px;
+    background-color: #fff;
 }
 
 .baggage-list-items-title {
