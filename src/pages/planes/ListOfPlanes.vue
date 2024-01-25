@@ -1,6 +1,5 @@
 <template>
     <div class="container">
-        <div class="days-row">
             <div class="short-info" v-if="chosenFlightNormalInfos && chosenFlightNormalInfos.length > 0">
                 <div class="short-info-part">
                     <span v-if="chosenFlightNormalInfos[0].from">{{ chosenFlightNormalInfos[0].from }} => </span>
@@ -10,15 +9,7 @@
                         Passangers | </span>
                     <span v-if="chosenFlightNormalInfos[0].class">{{ chosenFlightNormalInfos[0].class }}</span>
                 </div>
-                <div class="arrangement-part">
-                    <span @click="showComponent('editSearch')">Edit Search</span>
-                    <span @click="showComponent('dailyPrices')">Daily Estimated Prices</span>
-                </div>
-            </div>
         </div>
-
-        <edit-search v-if="activeComponent === 'editSearch'"></edit-search>
-        <daily-prices class="daily" v-if="activeComponent === 'dailyPrices'"></daily-prices>
 
         <div class="planes-row">
             <div class="filter-column">
@@ -243,15 +234,11 @@
 
 
 <script>
-import EditSearch from './daysComponents/EditSearch.vue';
-import DailyPrices from './daysComponents/DailyPrices.vue';
 import SummaryNormal from './flightSummaryComponents/SummaryNormal.vue';
 import SummaryConnecting from './flightSummaryComponents/SummaryConnecting.vue';
 
 export default {
     components: {
-        EditSearch,
-        DailyPrices,
         SummaryNormal,
         SummaryConnecting
     },
@@ -303,13 +290,25 @@ export default {
             }
             return chosenFlight;
         },
-        chosenFlightConnectingInfos() { // 2 tane for-loop iç içe. Buna bir çözüm bul !!!!
+        chosenFlightConnectingInfos() {
+            let isCoherent = true;
             let allPairedFlights = [];
             let chosenFlight = this.$store.getters['tickets/chosenFlightConnecting'];
             if (chosenFlight && chosenFlight.length > 0) {
                 for (let i = 0; i < chosenFlight[0].length; i++) {
                     for (let j = 0; j < chosenFlight[1].length; j++) {
-                        if (chosenFlight[0][i].to === (chosenFlight[1][j].from)) {
+                        if (chosenFlight[0][i].to === (chosenFlight[1][j].from) ) {
+                            if (chosenFlight[0][i].date === chosenFlight[1][j].date  ) {
+                                isCoherent = parseFloat(chosenFlight[0][i].arrivalTime) < parseFloat(chosenFlight[1][j].departureTime) &&
+                                    parseFloat(chosenFlight[0][i].departureTime) < parseFloat(chosenFlight[0][i].arrivalTime);
+                            } else if(parseFloat(chosenFlight[0][i].date.substring(0,5)) < parseFloat(chosenFlight[1][j].date.substring(0,5))){
+                                if(parseFloat(chosenFlight[0][i].departureTime) < parseFloat(chosenFlight[0][i].arrivalTime)) {
+                                    isCoherent = true;
+                                } else if(parseFloat(chosenFlight[0][i].departureTime) > parseFloat(chosenFlight[0][i].arrivalTime)) {
+                                    isCoherent = parseFloat(chosenFlight[0][i].arrivalTime) < parseFloat(chosenFlight[1][j].departureTime);
+                                }
+                            }
+                           if(isCoherent) {
                             allPairedFlights.push({
                                 selectedFlightId: Math.floor(Math.random() * Math.pow(10, 7)), // Daha sonra bunu üste al, öncekilerle(silinenlerden değil) eşit çıkarırsa değiştir
                                 id1: chosenFlight[0][i].id,                                  id2: chosenFlight[1][j].id,
@@ -328,6 +327,7 @@ export default {
                                 arrivalTime1: chosenFlight[0][i].arrivalTime,                arrivalTime2: chosenFlight[1][j].arrivalTime,
                                 price1: chosenFlight[0][i].price,                            price2: chosenFlight[1][j].price
                             });
+                          }  
                         }
                     }
                 }
@@ -415,14 +415,6 @@ export default {
             const isActive = event.target.checked;
             this.currentAirways[inputName] = isActive;
             this.activeAirways = Object.keys(this.currentAirways).filter(input => this.currentAirways[input]);    // activeAirways = activeAirways
-        },
-
-        showComponent(componentName) {
-            if (this.activeComponent === componentName) {
-                this.activeComponent = null;
-            } else {
-                this.activeComponent = componentName;
-            }
         },
         formatDate(dateString) {
             if (!dateString) {
@@ -639,23 +631,38 @@ export default {
 
 <style scoped>
 .container {
-    height: 100%;
-    width: 86%;
-    min-width: fit-content;
-    min-height: 60rem;
-    margin-left: 7%;
+    width: 100%;
+    padding: 0 5rem;
     overflow: visible !important;
     /* It permits the content to overflow. And !important gives priority to this property before the other rules */
 }
 
-.days-row {
-    background: rgb(235, 235, 235);
+/* @media (min-width: 1400px) {
+    .container {
+        width: 60%;
+    }
+} */
+
+@media (max-width:1000px) {
+    .filter-column {
+        width: 100%;
+    }
+    .planes-row {
+        display: block;
+        width: 96%;
+    }
+    .slct-btn {
+        font-size: .7rem;
+        padding: 6px 4px;
+    }
 }
 
 .short-info {
     display: flex;
     justify-content: space-between;
-    padding: 8px 12px;
+    padding: 8px 0;
+    margin: 10px 0;
+    font-size: 20px;
 }
 
 .fa-plane-up, .fa-flag, .fa-poll, .fa-clock {
@@ -666,23 +673,8 @@ export default {
     font-weight: bold;
 }
 
-.arrangement-part span:nth-child(2) {
-    margin: 0 2rem;
-}
-
-.daily {
-    width: auto;
-    min-width: fit-content;
-    height: 45%;
-    margin: 10px 0;
-}
-
 .planes-row {
     display: flex;
-    width: 100%;
-}
-
-.search-result-column {
     width: 100%;
 }
 
@@ -812,15 +804,21 @@ export default {
     color: #1b2f6fc9;
 }
 
+.flight-list-heading-promo {
+    margin: 0 5rem;
+}
+
+.flight-list-heading-price {
+    margin-left: 5rem;
+}
+
 ul {
     list-style: none;
 }
 
 .filter-column {
-    max-width: 316px;
     width: 20%;
     margin-right: 10px;
-    min-width: 20%;
 }
 
 .search {

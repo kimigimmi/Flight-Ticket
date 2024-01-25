@@ -104,7 +104,7 @@ export default {
 };
 </script>
   
-<style scoped>
+<style scoped>                     
 .fa-phone-volume {
   color: green;
 }
@@ -146,7 +146,12 @@ export default {
 }
 
 .birth-date {
-  cursor: pointer;
+  cursor: pointer;    
+}
+
+input:focus {
+  border-color: #00bdff;
+  outline: 0;   /* Removes default frame */
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {

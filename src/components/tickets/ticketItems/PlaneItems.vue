@@ -56,6 +56,8 @@
 </template>
 
 <script>
+
+
 export default {
     data() {
         return {
@@ -105,7 +107,7 @@ export default {
         searchTicket() {  // Seçtiğin class'a göre price belirle !!!!!!!!!!!!!!!!!!!!!!!!!!!
             const flightInfos = this.$store.getters['tickets/flightInfos'];
 
-            this.$store.dispatch('tickets/chosenFlightNormal', []); // Initialize at the start in case avoiding the last choice
+            this.$store.dispatch('tickets/chosenFlightNormal', []); // Initialize at the start in case of avoiding the last choice
             this.$store.dispatch('tickets/chosenFlightConnecting', []);
 
             // Normal uçuş kısmı :
@@ -150,13 +152,16 @@ export default {
                         return fromValue.from === this.from.val && fromValue.date === this.formattedDateOfDeparture() && this.passangerCount <= fromValue[this.class]
                     });
                     const toObjs = flightInfos.filter(toValue => {
-                        return toValue.to === this.to.val && (toValue.date === this.formattedDateOfDeparture() || parseFloat(toValue.date.substring(0, 4)) === parseFloat(this.formattedDateOfDeparture().substring(0, 4)) + 1)
+                        return toValue.to === this.to.val && (toValue.date === this.formattedDateOfDeparture() || parseFloat(toValue.date.substring(0, 5)) === parseFloat(this.formattedDateOfDeparture().substring(0, 5)) + 1)
                             && this.passangerCount <= toValue[this.class]
                     });
 
                     if (fromObjs && fromObjs.length > 0 && toObjs && toObjs.length > 0) {
                         const matchingFromValues = fromObjs.filter(fromFlight => {
-                            return toObjs.some(toFlight => fromFlight.to === toFlight.from)
+                            return toObjs.some((toFlight) => { 
+                                return fromFlight.to === toFlight.from;
+                            }
+                            )
                         });
 
                         const matchingToValues = toObjs.filter(toFlight => {
@@ -240,13 +245,84 @@ export default {
 
 <style scoped> 
 .container {
-     margin: 0 auto;
      display: flex;
      flex-direction: column;
      align-items: center;
      justify-content: center;
-     height: 40vh;
+     margin: 2rem 0;
  }
+
+ .input-group {
+     display: flex;
+     flex-direction: row;
+ }
+
+.input-group:not(:first-child) {
+    margin-top: 1rem;
+}
+
+ .form-group {
+     display: flex;
+     flex-direction: column;
+     margin: 0 20px;
+     /* İkinci form grupları arasındaki boşluk */
+ }
+
+
+ @media (max-width:500px) {
+    .form-group {
+       width: 1rem;
+    }
+    .form-group label, .input-group button {
+        font-size: 4px;
+    }
+}
+
+@media (min-width:500px) {
+    .form-group {
+       width: 3rem;
+    }
+    .form-group label, .input-group button {
+        font-size: 8px;
+    }
+}
+
+@media (min-width:650px) {
+    .form-group {
+       width: 6rem;
+    }
+    .form-group label, .input-group button {
+        font-size: 11px;
+    }
+}
+
+@media (min-width:800px) {
+    .form-group {
+       width: 9rem;
+    }
+    .form-group label, .input-group button {
+        font-size: 12px;
+    }
+}
+
+@media (min-width:950px) {
+    .form-group {
+       width: 12rem;
+    }
+    .form-group label, .input-group button {
+        font-size: 13px;
+    }
+}
+
+@media (min-width:1100px) {
+    .form-group {
+       width: 14rem;
+    }
+    .form-group label, .input-group button {
+        font-size: 14px;
+    }
+}
+
 
  .city-suggestion-list-from {
      width: 22%;
@@ -271,24 +347,7 @@ export default {
      margin-top: 5px;
  }
 
- .input-group {
-     display: flex;
-     flex-direction: row;
-     /* İkinci div'i yan yana getir */
-     margin-bottom: 20px;
-     flex-wrap: wrap;
- }
-
- .form-group {
-     display: flex;
-     flex-direction: column;
-     margin: 0 20px;
-     width: 15rem;
-     /* İkinci form grupları arasındaki boşluk */
- }
-
  label {
-     font-size: 14px;
      cursor: pointer;
      color: #fff;
  }
@@ -332,9 +391,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
  .input-icons {
      position: absolute;
      top: 50%;
-     right: 8px;
+     right: 11px;
      transform: translateY(-50%);
-     color: rgb(12, 20, 133); 
+     color: #1a1a1a;
      cursor: text;
  }
 
@@ -352,7 +411,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
      flex: 1;
      background-color: rgb(187, 22, 91);
      color: #fff;
-     font-size: 15px;
      cursor: pointer;
      border-color: transparent;
      border-radius: 5px;

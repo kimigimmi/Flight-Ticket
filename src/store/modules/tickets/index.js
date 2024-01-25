@@ -14,7 +14,7 @@ export default {
                     date: '17.10.2023',      // Format date'de ay ve gün yeri değişiyor. Çünkü burada yanlış 
                     from: 'Mardin',
                     to: 'İzmir',
-                    city_code_from: 'MQM',  // Daha sonra bunları buradan değil, api ile al veya bir arr açıp şehir kodlarını oraya yaz
+                    city_code_from: 'MQM',  
                     city_code_to: 'ADB',
                     departureTime: '9.20',
                     arrivalTime: '11.20',
@@ -291,6 +291,23 @@ export default {
                     departureTime: '16.40',
                     arrivalTime: '17.50',
                     price: 2010,
+                    numberOfBookableSeats: 10,  
+                    economy: 3,
+                    business: 5,
+                    firstClass: 2
+                },
+                {
+                    id: 12,
+                    name: 'Pegasus',
+                    img: "https://cdn.enuygun.com/ucak-bileti/v-dd142/assets/images/airline-icon/PC.png",
+                    date: '10.10.2023',
+                    from: 'İstanbul',
+                    to: 'Ankara',
+                    city_code_from: 'SAW',
+                    city_code_to: 'ESB',
+                    departureTime: '21.50',
+                    arrivalTime: '00.15',
+                    price: 2201,
                     numberOfBookableSeats: 10,  
                     economy: 3,
                     business: 5,

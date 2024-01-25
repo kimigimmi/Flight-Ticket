@@ -23,6 +23,7 @@ export default {
 
 html {
   font-family: "Roboto", sans-serif;
+  /* font-size: 6px; */
 }
 
 * {
@@ -30,4 +31,9 @@ html {
     padding: 0;
     box-sizing: border-box;
 }
+
+body {
+  margin: 0;
+}
+
 </style>

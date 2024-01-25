@@ -57,7 +57,7 @@ export default {
 </script>
 
 
-<style scoped>            /* Yakınlaştırıp uzaklaştırınca veya ekranı küçültünce her şey bozuluyo, düzelt */
+<style scoped>          
  .sky-background {       /* Bir kod bloğunu sola kaydırmak için : shift + tab,  sağa kaydırmak için: tab */ 
     background: linear-gradient(to top, #a5d6eb, #ffffff);
     height: 100vh;
@@ -71,17 +71,51 @@ export default {
 
   .content {
     width: 45%;
-    height: 100%;
     background-color: rgb(45, 100, 138);
     background: linear-gradient(to bottom, #1980a8, #0596f7);
     opacity: 0.8;
     border-radius: 6px;
-    min-width: 35rem;
-    min-height: 20rem;
     margin: 30px;
     overflow: auto;
     /* Avoids component items overflowing from content div */
   }
+
+
+@media (max-width:500px) {
+  .content ul li {
+      font-size: 5px;
+   }
+}
+
+@media (min-width:500px) {
+  .content ul li {
+      font-size: 7px;
+   }
+}
+
+@media (min-width:650px) {
+  .content ul li {
+      font-size: 9px;
+   }
+}
+
+@media (min-width:800px) {
+  .content ul li {
+      font-size: 11px;
+   }
+}
+
+@media (min-width:950px) {
+  .content ul li {
+      font-size: 13px;
+   }
+}
+
+@media (min-width:1100px) {
+   .content ul li {
+      font-size: 15px;
+   }
+}
 
   .content ul {
     list-style: none;
@@ -89,19 +123,13 @@ export default {
     align-items: center;
     justify-content: space-around;
     margin: 8px;
-    padding: 0;
+    padding: 2px;
   }
 
   .content ul li {
     margin-left: 20px;
-    margin-top: 10px;
     color: #e0dfdf;
     cursor: pointer;
-    font-size: 15px;
-  }
-
-  ul li:nth-child(1) {
-    margin-left: 0;
   }
 
   ul li.active {

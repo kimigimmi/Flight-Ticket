@@ -33,7 +33,7 @@
                          {{ price }} TL
                     </div>
                </div>
-               <button @click="selectFlight" class="slct-btn">Select ></button>
+               <button @click="selectFlight" class="slct-btn">Select</button>
           </div>
           <div v-if="detailVisible" class="segment-detail">
                <div class="segment-info">
@@ -115,7 +115,6 @@ export default {
      box-shadow: 2px 2px 10px rgba(196, 196, 196, 0.3), -2px -2px 1px rgba(191, 191, 191, 0.3); /* From both sides */
      margin-bottom: 10px;
      cursor: pointer;
-     min-width: 40rem;
      font-size: 14px;
 }
 
@@ -206,7 +205,6 @@ span {
 }
 
 .slct-btn {
-     height: 20%;
      background: #2dc44d;
      color: #fff;
      font-weight: 700;
